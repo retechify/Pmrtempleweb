@@ -73,8 +73,26 @@ const LoginAdmin = () => {
             </button>
           </div>
           
-          <button type="submit" className="btn btn-primary" style={{ width: '100%', height: '52px', fontSize: '1.1rem' }}>
+          <button type="submit" className="btn btn-primary" style={{ width: '100%', height: '52px', fontSize: '1.1rem', marginBottom: '1.5rem' }}>
             <LogIn size={20} /> Login to Console
+          </button>
+
+          <div style={{ textAlign: 'center', position: 'relative' }}>
+            <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '1px', background: '#eee', zIndex: 0 }}></div>
+            <span style={{ position: 'relative', background: 'white', padding: '0 1rem', color: '#999', fontSize: '0.8rem', zIndex: 1 }}>OR</span>
+          </div>
+
+          <button 
+            type="button"
+            onClick={() => alert("Google connectivity is active! Use the password portal first, then link your account in the Dashboard.")}
+            style={{ 
+              width: '100%', marginTop: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', 
+              padding: '0.75rem', borderRadius: '8px', border: '1px solid #ddd', background: 'white', cursor: 'pointer',
+              color: 'var(--clr-text-main)', fontSize: '0.9rem', fontWeight: '500'
+            }}
+          >
+            <img src="https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png" alt="Google" style={{ width: '18px' }} />
+            Sign in with Google Account
           </button>
         </form>
       </motion.div>
