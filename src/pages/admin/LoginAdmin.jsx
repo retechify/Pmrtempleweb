@@ -9,13 +9,19 @@ const LoginAdmin = () => {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const navigate = useNavigate();
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const handleLogin = (e) => {
     e.preventDefault();
-    if (credentials.username === 'Poomalur' && credentials.password === 'Admin@123') {
+    // Case-insensitive username check for better mobile experience
+    const isValidUser = credentials.username.trim().toLowerCase() === 'poomalur';
+    const isValidPass = credentials.password === 'Admin@123';
+
+    if (isValidUser && isValidPass) {
       localStorage.setItem('temple_admin_auth', 'true');
       navigate('/admin/dashboard');
     } else {
-      setError('Invalid username or password');
+      setError('Invalid username or password. Please check for correct capitals.');
     }
   };
 
@@ -48,16 +54,23 @@ const LoginAdmin = () => {
           <div className="form-group" style={{ marginBottom: '1rem' }}>
             <label className="form-label" style={{ fontSize: '0.9rem' }}>Username</label>
             <input 
-              type="text" className="form-control" required placeholder="Enter Username"
+              type="text" className="form-control" required placeholder="Enter Username (e.g. Poomalur)"
               value={credentials.username} onChange={(e) => setCredentials({...credentials, username: e.target.value})}
             />
           </div>
-          <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+          <div className="form-group" style={{ marginBottom: '1.5rem', position: 'relative' }}>
             <label className="form-label" style={{ fontSize: '0.9rem' }}>Password</label>
             <input 
-              type="password" className="form-control" required placeholder="Enter Password"
+              type={showPassword ? "text" : "password"} className="form-control" required placeholder="Enter Password"
               value={credentials.password} onChange={(e) => setCredentials({...credentials, password: e.target.value})}
             />
+            <button 
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              style={{ position: 'absolute', right: '10px', bottom: '10px', background: 'none', border: 'none', color: 'var(--clr-maroon)', cursor: 'pointer', fontSize: '0.8rem' }}
+            >
+              {showPassword ? "Hide" : "Show"}
+            </button>
           </div>
           
           <button type="submit" className="btn btn-primary" style={{ width: '100%', height: '52px', fontSize: '1.1rem' }}>
