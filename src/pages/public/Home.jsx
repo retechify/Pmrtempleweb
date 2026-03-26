@@ -52,28 +52,28 @@ const Home = () => {
         <div style={{ position: 'absolute', bottom: '-20%', left: '-10%', width: '60vw', height: '60vw', background: 'radial-gradient(circle, rgba(140,28,32,0.08) 0%, rgba(255,255,255,0) 70%)', borderRadius: '50%', filter: 'blur(60px)', zIndex: 0 }}></div>
 
         <div className="container" style={{ position: 'relative', zIndex: 10 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem', alignItems: 'center' }}>
+          <div className="grid grid-cols-2" style={{ alignItems: 'center', gap: '2rem' }}>
             
             {/* Left Column - Text Content */}
             <motion.div 
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              style={{ textAlign: 'left' }}
+              className="hero-text"
             >
               <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', color: 'var(--clr-maroon)', marginBottom: '1.5rem', lineHeight: '1.1', fontFamily: "var(--font-heading)" }}>
                 Sri Sakthi <br/>
                 <span style={{ color: 'var(--clr-gold-dark)', display: 'inline-block', marginTop: '0.5rem' }}>Makaliyamman</span>
               </h1>
-              <p style={{ fontSize: '1.25rem', color: 'var(--clr-text-main)', marginBottom: '2.5rem', opacity: 0.9, lineHeight: '1.6', maxWidth: '500px' }}>
+              <p style={{ fontSize: '1.1rem', color: 'var(--clr-text-main)', marginBottom: '2.5rem', opacity: 0.9, lineHeight: '1.6', maxWidth: '600px' }}>
                 A sacred abode of peace, devotion, and community in the heart of Poomalur. Seek the ultimate divine blessings.
               </p>
-              <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
-                <Link to="/donations" className="btn" style={{ padding: '1rem 2rem', fontSize: '1.1rem', background: 'var(--clr-maroon)', color: 'white', boxShadow: '0 8px 20px rgba(140, 28, 32, 0.3)' }}>
-                  Donate Now <Heart size={20} />
+              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                <Link to="/donations" className="btn" style={{ flex: '1 1 auto', minWidth: '200px', padding: '1rem', background: 'var(--clr-maroon)', color: 'white', boxShadow: '0 8px 20px rgba(140, 28, 32, 0.3)' }}>
+                   Donate Now <Heart size={20} />
                 </Link>
-                <Link to="/about" className="btn btn-outline" style={{ padding: '1rem 2rem', fontSize: '1.1rem', color: 'var(--clr-maroon)', borderColor: 'var(--clr-maroon)' }}>
-                  View Details <Info size={20} />
+                <Link to="/about" className="btn btn-outline" style={{ flex: '1 1 auto', minWidth: '200px', padding: '1rem', color: 'var(--clr-maroon)', borderColor: 'var(--clr-maroon)' }}>
+                   View Details <Info size={20} />
                 </Link>
               </div>
             </motion.div>
@@ -81,28 +81,34 @@ const Home = () => {
             {/* Right Column - Goddess Image */}
             <motion.div 
               style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}
-              initial={{ opacity: 0, y: 50, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, delay: 0.2 }}
             >
               <img 
                 src="/makaliyamman.png" 
                 alt="Sri Sakthi Makaliyamman Goddess"
                 className="divine-glow"
                 style={{ 
-                  position: 'relative',
-                  width: '100%', 
-                  maxWidth: '450px', 
+                  width: '90%', 
+                  maxWidth: '400px', 
                   height: 'auto', 
                   borderRadius: '20px', 
                   objectFit: 'contain'
                 }} 
               />
             </motion.div>
-
           </div>
         </div>
       </section>
+
+      <style>{`
+        @media (max-width: 900px) {
+          .hero-text { text-align: center !important; }
+          .hero-text p { margin-left: auto; margin-right: auto; }
+          .hero-text div { justify-content: center; }
+        }
+      `}</style>
 
       {/* Highlights Section */}
       <section className="section bg-off-white">

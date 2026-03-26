@@ -11,21 +11,12 @@ const LoginAdmin = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (credentials.username === 'Pmrtemple' && credentials.password === 'Temple@123') {
+    if (credentials.username === 'Poomalur' && credentials.password === 'Admin@123') {
       localStorage.setItem('temple_admin_auth', 'true');
       navigate('/admin/dashboard');
     } else {
       setError('Invalid username or password');
     }
-  };
-
-  const handleGoogleAuth = () => {
-    setIsGoogleLoading(true);
-    // Realistic simulation of a Google Auth flow
-    setTimeout(() => {
-      localStorage.setItem('temple_admin_auth', 'true');
-      navigate('/admin/dashboard');
-    }, 1500);
   };
 
   return (
@@ -69,32 +60,10 @@ const LoginAdmin = () => {
             />
           </div>
           
-          <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
-            <LogIn size={18} /> Login
+          <button type="submit" className="btn btn-primary" style={{ width: '100%', height: '52px', fontSize: '1.1rem' }}>
+            <LogIn size={20} /> Login to Console
           </button>
         </form>
-
-        <div style={{ display: 'flex', alignItems: 'center', margin: '1.5rem 0', gap: '0.5rem' }}>
-          <div style={{ flex: 1, height: '1px', background: '#e2e8f0' }}></div>
-          <span style={{ fontSize: '0.85rem', color: 'var(--clr-text-muted)' }}>OR</span>
-          <div style={{ flex: 1, height: '1px', background: '#e2e8f0' }}></div>
-        </div>
-
-        <button 
-          onClick={handleGoogleAuth} 
-          className="btn btn-outline" 
-          disabled={isGoogleLoading}
-          style={{ width: '100%', borderColor: '#e2e8f0', color: 'var(--clr-text-main)' }}
-        >
-          {isGoogleLoading ? (
-            <span style={{ fontSize: '0.9rem', color: 'var(--clr-text-muted)' }}>Signing in with Google...</span>
-          ) : (
-            <>
-              <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" style={{ width: '18px', height: '18px', marginRight: '0.5rem' }} />
-              Continue with Google
-            </>
-          )}
-        </button>
       </motion.div>
     </div>
   );

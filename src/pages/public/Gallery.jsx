@@ -49,7 +49,7 @@ const Gallery = () => {
 
         <motion.div 
           className="grid"
-          style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '2rem' }}
+          style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}
           initial="hidden"
           animate="visible"
           variants={{

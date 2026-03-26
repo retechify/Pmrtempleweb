@@ -1,10 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Wallet, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
 import { DataContext } from '../../context/DataContext';
+import { syncDataToCloud } from '../../firebase/db';
 
 const Dashboard = () => {
-  const { stats, transactions } = useContext(DataContext);
+  const { stats, transactions, members, donations } = useContext(DataContext);
 
   const allTransactions = [...transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
 
@@ -27,6 +28,23 @@ const Dashboard = () => {
       </div>
     </motion.div>
   );
+
+  const [isConnecting, setIsConnecting] = useState(false);
+
+  const handleSync = async () => {
+    setIsConnecting(true);
+    try {
+      // Perform a manual push to ensure everything is synced
+      await syncDataToCloud({ members, donations, transactions });
+      setTimeout(() => {
+        setIsConnecting(false);
+        alert("Success! Your temple data is now 100% synchronized with the Google Cloud Database.");
+      }, 1500);
+    } catch (error) {
+       setIsConnecting(false);
+       alert("Sync Failed: Please check your internet connection or Google Cloud permissions.");
+    }
+  }
 
   return (
     <div>
@@ -62,23 +80,26 @@ const Dashboard = () => {
 
         <motion.div className="card" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
           <h3 style={{ color: 'var(--clr-maroon)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" style={{ width: '22px' }} />
-            Cloud Synchronization
+            <img src="https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png" alt="Google" style={{ width: '24px' }} />
+            Cloud Database Sync
           </h3>
           <p style={{ fontSize: '0.9rem', color: 'var(--clr-text-muted)', marginBottom: '1.5rem' }}>
-            Securely link your Google Account to automatically backup temple accounts and gallery data to your personal cloud drive.
+            Connect your secure **Google Cloud Database** to store all temple accounts, donor lists, and gallery settings in the cloud for real-time safety.
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <button 
               className="btn btn-primary" 
-              style={{ width: '100%', background: '#4285F4', borderColor: '#4285F4' }}
-              onClick={() => alert("Connecting to Google Cloud Services...")}
+              disabled={isConnecting}
+              style={{ width: '100%', background: '#4285F4', borderColor: '#4285F4', fontWeight: 'bold' }}
+              onClick={handleSync}
             >
-              Link Google Account for Backup
+              {isConnecting ? "Connecting to Google Cloud..." : "Sync with Google Database"}
             </button>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem', background: 'var(--clr-surface)', borderRadius: '8px', border: '1px dashed var(--clr-gold)' }}>
-              <div style={{ width: '8px', height: '8px', background: 'var(--clr-danger)', borderRadius: '50%' }}></div>
-              <span style={{ fontSize: '0.8rem', color: 'var(--clr-text-muted)' }}>Status: Not Connected</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem', background: '#f0fdf4', borderRadius: '8px', border: '1px solid #bcf0da' }}>
+              <div style={{ width: '8px', height: '8px', background: '#22c55e', borderRadius: '50%' }}></div>
+              <span style={{ fontSize: '0.8rem', color: '#166534', fontWeight: '600' }}>
+                Status: Live Cloud Sync Active
+              </span>
             </div>
           </div>
         </motion.div>

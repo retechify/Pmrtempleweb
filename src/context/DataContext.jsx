@@ -1,4 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { syncDataToCloud, db } from '../firebase/db';
+import { doc, getDoc } from 'firebase/firestore';
 
 export const DataContext = createContext();
 
@@ -34,38 +36,53 @@ const defaultMangalyaMembers = [
 }));
 
 export const DataProvider = ({ children }) => {
-  const [members, setMembers] = useState(() => {
-    const saved = localStorage.getItem('temple_members');
-    const parsed = saved ? JSON.parse(saved) : [];
-    
-    // Auto-populate the 108 names if they are entirely missing from local storage
-    const existingNames = new Set(parsed.map(m => m.name));
-    const toAdd = defaultMangalyaMembers.filter(m => !existingNames.has(m.name));
-    return [...parsed, ...toAdd];
-  });
+  const [members, setMembers] = useState([]);
+  const [donations, setDonations] = useState([]);
+  const [transactions, setTransactions] = useState([]);
 
-  const [donations, setDonations] = useState(() => {
-    const saved = localStorage.getItem('temple_donations');
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  const [transactions, setTransactions] = useState(() => {
-    const saved = localStorage.getItem('temple_transactions');
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  // Save to local storage whenever data changes
+  // 1. Initial Load (Local + Cloud Sync)
   useEffect(() => {
-    localStorage.setItem('temple_members', JSON.stringify(members));
-  }, [members]);
+    const initializeData = async () => {
+      // First, lead from local for speed
+      const localM = localStorage.getItem('temple_members');
+      const localD = localStorage.getItem('temple_donations');
+      const localT = localStorage.getItem('temple_transactions');
 
-  useEffect(() => {
-    localStorage.setItem('temple_donations', JSON.stringify(donations));
-  }, [donations]);
+      if (localM) setMembers(JSON.parse(localM));
+      if (localD) setDonations(JSON.parse(localD));
+      if (localT) setTransactions(JSON.parse(localT));
 
+      // Then, fetch from Cloud to override/update
+      try {
+        const docSnap = await getDoc(doc(db, "temple_data", "main_data"));
+        if (docSnap.exists()) {
+          const cloud = docSnap.data();
+          if (cloud.members) setMembers(cloud.members);
+          if (cloud.donations) setDonations(cloud.donations);
+          if (cloud.transactions) setTransactions(cloud.transactions);
+          console.log("Cloud Data Synced!");
+        } else if (!localM || JSON.parse(localM).length === 0) {
+          // Fallback to default if everything is empty
+          setMembers(defaultMangalyaMembers);
+        }
+      } catch (e) {
+        console.error("Cloud Sync Error:", e);
+      }
+    };
+    initializeData();
+  }, []);
+
+  // 2. Persistence Layer
   useEffect(() => {
-    localStorage.setItem('temple_transactions', JSON.stringify(transactions));
-  }, [transactions]);
+    if (members.length > 0) {
+      localStorage.setItem('temple_members', JSON.stringify(members));
+      localStorage.setItem('temple_donations', JSON.stringify(donations));
+      localStorage.setItem('temple_transactions', JSON.stringify(transactions));
+      
+      // Auto-Sync to Google Cloud
+      syncDataToCloud({ members, donations, transactions });
+    }
+  }, [members, donations, transactions]);
 
   // Actions
   const addMember = (member) => setMembers([...members, { id: Date.now().toString(), ...member }]);
@@ -79,14 +96,13 @@ export const DataProvider = ({ children }) => {
   const addTransaction = (txn) => setTransactions([...transactions, { id: Date.now().toString(), ...txn }]);
   const deleteTransaction = (id) => setTransactions(transactions.filter(t => t.id !== id));
 
-  // Derived calculations for Contributions Tracking
+  // Derived stats
   const totalMangalya = members.filter(m => m.category === 'Mangalya Contribution').reduce((acc, curr) => acc + Number(curr.amountPaid || 0), 0);
   const totalFamily = members.filter(m => m.category === 'Family Contribution').reduce((acc, curr) => acc + Number(curr.amountPaid || 0), 0);
   const totalDonationsList = donations.reduce((acc, curr) => acc + Number(curr.amount || 0), 0);
 
-  // General Ledger Auto-Calculations
-  const totalIncome = transactions.filter(t => t.type === 'Credit').reduce((acc, curr) => acc + Number(curr.amount), 0);
-  const totalExpense = transactions.filter(t => t.type === 'Debit').reduce((acc, curr) => acc + Number(curr.amount), 0);
+  const totalIncome = transactions.filter(t => t.type === 'Credit').reduce((acc, curr) => acc + Number(curr.amount || 0), 0);
+  const totalExpense = transactions.filter(t => t.type === 'Debit').reduce((acc, curr) => acc + Number(curr.amount || 0), 0);
   const netBalance = totalIncome - totalExpense;
 
   return (
@@ -94,14 +110,7 @@ export const DataProvider = ({ children }) => {
       members, addMember, updateMember, deleteMember,
       donations, addDonation, updateDonation, deleteDonation,
       transactions, addTransaction, deleteTransaction,
-      stats: {
-        totalMangalya,
-        totalFamily,
-        totalDonationsList,
-        totalIncome,
-        totalExpense,
-        netBalance
-      }
+      stats: { totalMangalya, totalFamily, totalDonationsList, totalIncome, totalExpense, netBalance }
     }}>
       {children}
     </DataContext.Provider>
