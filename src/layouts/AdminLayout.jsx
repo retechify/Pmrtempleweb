@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, CreditCard, BookOpen, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Users, CreditCard, BookOpen, LogOut, Menu, X, Globe } from 'lucide-react';
 
 const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -46,9 +46,12 @@ const AdminLayout = () => {
         className="admin-sidebar"
       >
         <div style={{ padding: '2rem 1.5rem', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h2 style={{ fontSize: '1.25rem', color: 'var(--clr-maroon)', fontFamily: 'var(--font-heading)' }}>
-            Temple Admin
-          </h2>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <h2 style={{ fontSize: '1.25rem', color: 'var(--clr-maroon)', fontFamily: 'var(--font-heading)', margin: 0 }}>
+              Temple Admin
+            </h2>
+            <span style={{ fontSize: '0.75rem', color: 'var(--clr-text-muted)' }}>Sri Sakthi Makaliyamman</span>
+          </div>
           <button 
             style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'block' }}
             className="mobile-close-btn"
@@ -83,7 +86,29 @@ const AdminLayout = () => {
           ))}
         </nav>
 
-        <div style={{ padding: '1.5rem 1rem', borderTop: '1px solid #e2e8f0' }}>
+        <div style={{ padding: '1.5rem 1rem', borderTop: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <NavLink 
+            to="/"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1rem',
+              padding: '0.75rem 1rem',
+              width: '100%',
+              background: 'transparent',
+              color: 'var(--clr-maroon)',
+              fontWeight: '600',
+              textDecoration: 'none',
+              borderRadius: '8px',
+              transition: 'background 0.2s'
+            }}
+            onMouseOver={(e) => e.target.style.background = '#fffbeb'}
+            onMouseOut={(e) => e.target.style.background = 'transparent'}
+          >
+            <Globe size={20} />
+            View Website
+          </NavLink>
+
           <button 
             onClick={handleLogout}
             style={{
