@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Lock, LogIn } from 'lucide-react';
+import { Lock, LogIn, ArrowLeft } from 'lucide-react';
 
 const LoginAdmin = () => {
   const [credentials, setCredentials] = useState({ username: '', password: '' });
@@ -88,12 +88,24 @@ const LoginAdmin = () => {
             style={{ 
               width: '100%', marginTop: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', 
               padding: '0.75rem', borderRadius: '8px', border: '1px solid #ddd', background: 'white', cursor: 'pointer',
-              color: 'var(--clr-text-main)', fontSize: '0.9rem', fontWeight: '500'
+              color: 'var(--clr-text-main)', fontSize: '0.9rem', fontWeight: '500', marginBottom: '2rem'
             }}
           >
             <img src="https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png" alt="Google" style={{ width: '18px' }} />
             Sign in with Google Account
           </button>
+
+          <div style={{ textAlign: 'center', borderTop: '1px solid #eee', paddingTop: '1.5rem' }}>
+            <Link 
+              to="/" 
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: 'var(--clr-maroon)', textDecoration: 'none', fontWeight: '600', fontSize: '0.95rem' }}
+              onMouseOver={(e) => e.target.style.textDecoration = 'underline'}
+              onMouseOut={(e) => e.target.style.textDecoration = 'none'}
+            >
+              <ArrowLeft size={18} />
+              Return to Website Home
+            </Link>
+          </div>
         </form>
       </motion.div>
     </div>
