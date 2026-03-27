@@ -29,9 +29,28 @@ const Accounts = () => {
   const filteredTxns = transactions.filter(t => t.description.toLowerCase().includes(searchTerm.toLowerCase())).sort((a,b) => new Date(b.date) - new Date(a.date));
 
   const allContributions = [
-    ...members.map(m => ({ id: m.id, date: m.paymentDate, source: 'Member', name: m.name, category: m.category, amount: m.amountPaid })),
-    ...donations.map(d => ({ id: d.id, date: d.date, source: 'Donation', name: d.donorName, category: d.category, amount: d.amount }))
-  ].sort((a,b) => new Date(b.date) - new Date(a.date)).filter(c => c.name?.toLowerCase().includes(searchTerm.toLowerCase()));
+    // Only show members who have actually made a payment
+    ...members
+      .filter(m => (m.totalPaid || 0) > 0)
+      .map(m => ({ 
+        id: m.id, 
+        date: m.lastPaymentDate, 
+        source: 'Member', 
+        name: m.name, 
+        category: m.category, 
+        amount: m.totalPaid 
+      })),
+    // Include all general donations
+    ...donations.map(d => ({ 
+      id: d.id, 
+      date: d.date, 
+      source: 'Donation', 
+      name: d.donorName, 
+      category: d.category, 
+      amount: d.amount 
+    }))
+  ].sort((a,b) => new Date(a.date) - new Date(b.date)) // Sort ASC - Earliest first
+   .filter(c => c.name?.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
     <div className="section" style={{ minHeight: '80vh', paddingTop: '6rem' }}>
@@ -119,7 +138,25 @@ const Accounts = () => {
                     {allContributions.map((c) => (
                       <tr key={c.id}>
                         <td>{c.date || 'N/A'}</td>
-                        <td style={{ fontWeight: '500' }}>{c.name}</td>
+                        <td style={{ fontWeight: '500' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            {c.name}
+                            {c.amount >= 2501 && (
+                              <span style={{ 
+                                background: 'var(--clr-gold)', 
+                                color: 'white', 
+                                fontSize: '0.65rem', 
+                                padding: '2px 8px', 
+                                borderRadius: '20px',
+                                fontWeight: 'bold',
+                                boxShadow: '0 2px 4px rgba(212,175,55,0.4)',
+                                whiteSpace: 'nowrap'
+                              }}>
+                                🏆 Special Mark
+                              </span>
+                            )}
+                          </div>
+                        </td>
                         <td><span style={{ fontSize: '0.85rem', color: 'var(--clr-text-muted)' }}>{c.category}</span></td>
                         <td style={{ textAlign: 'right', fontWeight: 'bold', color: 'var(--clr-success)' }}>
                           {formatCurrency(c.amount)}

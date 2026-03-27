@@ -62,6 +62,7 @@ const LedgerAdmin = () => {
         <table className="table">
           <thead>
             <tr>
+              <th style={{ width: '60px' }}>S.No</th>
               <th>Date</th>
               <th>Description</th>
               <th>Type</th>
@@ -70,28 +71,37 @@ const LedgerAdmin = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredTxns.map(t => (
-              <tr key={t.id}>
-                <td>{t.date}</td>
+            {filteredTxns.map((t, index) => (
+              <tr key={t.id} style={{ borderLeft: `4px solid ${t.type === 'Credit' ? 'var(--clr-success)' : 'var(--clr-danger)'}` }}>
+                <td style={{ color: 'var(--clr-text-muted)', fontWeight: 'bold' }}>{index + 1}</td>
+                <td style={{ fontWeight: '500' }}>{t.date}</td>
                 <td>{t.description}</td>
                 <td>
                   <span style={{ 
-                    background: t.type === 'Credit' ? 'var(--clr-success)' : 'var(--clr-danger)', 
-                    color: 'white', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.8rem' 
+                    background: t.type === 'Credit' ? '#ecfdf5' : '#fef2f2', 
+                    color: t.type === 'Credit' ? 'var(--clr-success)' : 'var(--clr-danger)', 
+                    padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold', border: `1px solid ${t.type === 'Credit' ? '#d1fae5' : '#fee2e2'}`
                   }}>
-                    {t.type}
+                    {t.type === 'Credit' ? 'INCOME' : 'EXPENSE'}
                   </span>
                 </td>
-                <td style={{ textAlign: 'right', fontWeight: 'bold', color: t.type === 'Credit' ? 'var(--clr-success)' : 'var(--clr-danger)' }}>
+                <td style={{ textAlign: 'right', fontWeight: 'bold', fontSize: '1rem', color: t.type === 'Credit' ? 'var(--clr-success)' : 'var(--clr-danger)' }}>
                   {t.type === 'Credit' ? '+' : '-'}{formatCurrency(t.amount)}
                 </td>
                 <td style={{ textAlign: 'center' }}>
-                  <button onClick={() => deleteTransaction(t.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--clr-danger)' }}>
+                  <button onClick={() => deleteTransaction(t.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--clr-danger)' }} title="Delete Entry">
                     <Trash2 size={18} />
                   </button>
                 </td>
               </tr>
             ))}
+            {filteredTxns.length === 0 && (
+              <tr>
+                <td colSpan="6" style={{ textAlign: 'center', padding: '2rem', color: 'var(--clr-text-muted)' }}>
+                  No ledger entries found.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

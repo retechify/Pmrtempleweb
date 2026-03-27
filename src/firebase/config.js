@@ -2,11 +2,11 @@
 // LIVE CONNECTION ESTABLISHED
 
 export const firebaseConfig = {
-  apiKey: "AIzaSyC5fde7RNMvgFsHVLEVkqVGI4gkdTz8x-A",
-  authDomain: "templeaccountmanager.firebaseapp.com",
-  projectId: "templeaccountmanager",
-  storageBucket: "templeaccountmanager.firebasestorage.app",
-  messagingSenderId: "712367366664",
-  appId: "1:712367366664:web:478b6769ecd3d1b15de7bd",
-  measurementId: "G-8PZ2QSGSSK"
+  apiKey: "AIzaSyA6dmx4NP-pN9lClBiEwG7pl_feBczI6UM",
+  authDomain: "templeaccountmanager-73af9.firebaseapp.com",
+  projectId: "templeaccountmanager-73af9",
+  storageBucket: "templeaccountmanager-73af9.firebasestorage.app",
+  messagingSenderId: "167892665293",
+  appId: "1:167892665293:web:f762fdd55f5a3dc9f8ba84",
+  measurementId: "G-Q3JVPZ6MDK"
 };

@@ -13,8 +13,8 @@ const AdminLayout = () => {
 
   const menuItems = [
     { name: 'Dashboard', path: '/admin/dashboard', icon: <LayoutDashboard size={20} /> },
-    { name: 'Members', path: '/admin/members', icon: <Users size={20} /> },
-    { name: 'Donations', path: '/admin/donations', icon: <CreditCard size={20} /> },
+    { name: 'Makalya Contribution Data', path: '/admin/members', icon: <Users size={20} /> },
+    { name: 'Donors Details', path: '/admin/donations', icon: <CreditCard size={20} /> },
     { name: 'General Ledger', path: '/admin/ledger', icon: <BookOpen size={20} /> },
   ];
 

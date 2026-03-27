@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Lock, LogIn, ArrowLeft } from 'lucide-react';
+import { signInWithPopup } from 'firebase/auth';
+import { auth, googleProvider } from '../../firebase/db';
 
 const LoginAdmin = () => {
   const [credentials, setCredentials] = useState({ username: '', password: '' });
@@ -22,6 +24,27 @@ const LoginAdmin = () => {
       navigate('/admin/dashboard');
     } else {
       setError('Invalid username or password. Please check for correct capitals.');
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setIsGoogleLoading(true);
+    setError('');
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      // If we got here, login was successful
+      localStorage.setItem('temple_admin_auth', 'true');
+      localStorage.setItem('temple_admin_user', JSON.stringify({
+        name: result.user.displayName,
+        email: result.user.email,
+        photo: result.user.photoURL
+      }));
+      navigate('/admin/dashboard');
+    } catch (err) {
+      console.error("Google Auth Error:", err);
+      setError('Google Sign-In failed: ' + err.message);
+    } finally {
+      setIsGoogleLoading(false);
     }
   };
 
@@ -74,7 +97,7 @@ const LoginAdmin = () => {
           </div>
           
           <button type="submit" className="btn btn-primary" style={{ width: '100%', height: '52px', fontSize: '1.1rem', marginBottom: '1.5rem' }}>
-            <LogIn size={20} /> Login to Console
+             Login to Console <LogIn size={20} />
           </button>
 
           <div style={{ textAlign: 'center', position: 'relative' }}>
@@ -84,15 +107,23 @@ const LoginAdmin = () => {
 
           <button 
             type="button"
-            onClick={() => alert("Google connectivity is active! Use the password portal first, then link your account in the Dashboard.")}
+            disabled={isGoogleLoading}
+            onClick={handleGoogleLogin}
             style={{ 
               width: '100%', marginTop: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', 
-              padding: '0.75rem', borderRadius: '8px', border: '1px solid #ddd', background: 'white', cursor: 'pointer',
-              color: 'var(--clr-text-main)', fontSize: '0.9rem', fontWeight: '500', marginBottom: '2rem'
+              padding: '0.75rem', borderRadius: '8px', border: '1px solid #ddd', background: 'white', cursor: isGoogleLoading ? 'not-allowed' : 'pointer',
+              color: 'var(--clr-text-main)', fontSize: '0.9rem', fontWeight: '500', marginBottom: '2rem',
+              opacity: isGoogleLoading ? 0.7 : 1
             }}
           >
-            <img src="https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png" alt="Google" style={{ width: '18px' }} />
-            Sign in with Google Account
+            {isGoogleLoading ? (
+               <span className="spinner" style={{ width: '18px', height: '18px', border: '2px solid #ddd', borderTopColor: 'var(--clr-maroon)', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></span>
+            ) : (
+              <>
+                <img src="https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png" alt="Google" style={{ width: '18px' }} />
+                Sign in with Google Account
+              </>
+            )}
           </button>
 
           <div style={{ textAlign: 'center', borderTop: '1px solid #eee', paddingTop: '1.5rem' }}>

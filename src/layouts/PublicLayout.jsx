@@ -18,7 +18,7 @@ const PublicLayout = () => {
     { name: 'Videos', path: '/videos' },
     { name: 'Location', path: '/location' },
     { name: 'Contact', path: '/contact' },
-    { name: isAdmin ? 'Admin Console' : 'Admin Login', path: '/admin' },
+    { name: isAdmin ? 'Admin Console' : 'Admin Login', path: isAdmin ? '/admin' : '/admin/login' },
   ];
 
   const closeMenu = () => setIsOpen(false);
@@ -141,7 +141,23 @@ const PublicLayout = () => {
           </div>
           <div>
             <h3 style={{ color: 'var(--clr-gold)', marginBottom: '1rem' }}>Admin Access</h3>
-            <Link to="/admin" style={{ color: 'rgba(255,255,255,0.8)', textDecoration: 'underline' }}>Admin Portal Login</Link>
+            <Link 
+              to="/admin/login" 
+              style={{ 
+                color: 'var(--clr-gold)', 
+                textDecoration: 'none',
+                background: 'rgba(255,255,255,0.1)',
+                padding: '0.5rem 1rem',
+                borderRadius: '8px',
+                display: 'inline-block',
+                marginTop: '0.5rem',
+                fontSize: '0.9rem',
+                fontWeight: '600',
+                border: '1px solid rgba(212,175,55,0.3)'
+              }}
+            >
+              Admin Portal Login
+            </Link>
           </div>
         </div>
         <div className="container" style={{ marginTop: '3rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.1)', textAlign: 'center', color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem' }}>

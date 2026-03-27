@@ -4,7 +4,7 @@ import { QrCode, CreditCard, HeartHandshake, CheckCircle } from 'lucide-react';
 import { DataContext } from '../../context/DataContext';
 
 const Donations = () => {
-  const { addDonation } = useContext(DataContext);
+  const { addDonation, donations } = useContext(DataContext);
   const [formData, setFormData] = useState({ name: '', amount: '', category: 'Donation' });
   const [showQR, setShowQR] = useState(false);
   const [processing, setProcessing] = useState(false);
@@ -34,6 +34,9 @@ const Donations = () => {
       }, 4000);
     }, 2000);
   };
+
+  const isMakalya = (cat) => cat === 'Makalya Contribution' || cat === 'Mangalya Contribution';
+  const recentDonations = [...(donations || [])].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 10);
 
   return (
     <div className="section" style={{ minHeight: '80vh', paddingTop: '6rem' }}>
@@ -83,7 +86,7 @@ const Donations = () => {
                     value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})}
                   >
                     <option value="Donation">General Donation</option>
-                    <option value="Mangalya Contribution">Mangalya Contribution</option>
+                    <option value="Makalya Contribution">Makalya Contribution</option>
                     <option value="Family Contribution">Family Contribution</option>
                   </select>
                 </div>
@@ -175,11 +178,59 @@ const Donations = () => {
               </ul>
             </div>
           </motion.div>
-
         </div>
+
+        {/* Live Contribution List */}
+        <motion.div 
+          className="card" 
+          style={{ marginTop: '4rem', borderTop: '4px solid var(--clr-gold)' }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <h2 style={{ color: 'var(--clr-maroon)', marginBottom: '1.5rem', fontFamily: 'var(--font-heading)', textAlign: 'center' }}>
+            Recent Divine Contributions
+          </h2>
+          <div className="table-container">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Donor Name</th>
+                  <th>Category</th>
+                  <th>Contribution (₹)</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recentDonations.map((d, i) => (
+                  <tr key={i}>
+                    <td style={{ fontWeight: '600' }}>{d.donorName}</td>
+                    <td>
+                      <span style={{ 
+                        background: isMakalya(d.category) ? 'var(--clr-gold-light)' : '#f3f4f6', 
+                        display: 'inline-block', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold'
+                      }}>
+                        {d.category}
+                      </span>
+                    </td>
+                    <td style={{ fontWeight: 'bold' }}>₹{d.amount?.toLocaleString()}</td>
+                    <td style={{ color: 'var(--clr-text-muted)', fontSize: '0.85rem' }}>{d.date}</td>
+                  </tr>
+                ))}
+                {recentDonations.length === 0 && (
+                  <tr>
+                    <td colSpan="4" style={{ textAlign: 'center', color: '#ccc', padding: '2rem' }}>No recent contributions recorded yet.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </motion.div>
+
       </div>
     </div>
   );
 };
+;
 
 export default Donations;
