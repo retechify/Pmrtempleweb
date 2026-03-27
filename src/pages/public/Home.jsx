@@ -364,60 +364,6 @@ const Home = () => {
       `}</style>
 
 
-      {/* Historical Festival Archives Section */}
-      <section className="section" id="archives" style={{ background: '#f8fafc', padding: '5rem 0' }}>
-        <div className="container">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            style={{ textAlign: 'center', marginBottom: '4rem' }}
-          >
-            <h2 className="section-title" style={{ fontSize: '2.5rem', marginBottom: '1.5rem', color: '#1e293b' }}>
-              Historical Festival Records
-            </h2>
-            <div className="section-divider"></div>
-            <p style={{ maxWidth: '700px', margin: '1.5rem auto 0', textTransform: 'none', color: '#64748b', fontSize: '1.1rem' }}>
-              Explore the legacy of past festivals. Click any year to view the archived total contributions and community records.
-            </p>
-          </motion.div>
-
-          {archives && archives.length > 0 ? (
-            <div className="grid grid-cols-3" style={{ gap: '2rem' }}>
-              {archives.map((arch, idx) => (
-                <motion.div
-                  key={idx}
-                  whileHover={{ y: -10 }}
-                  style={{ 
-                    padding: '2.5rem', 
-                    background: 'white', 
-                    borderRadius: '24px', 
-                    boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
-                    border: '1px solid #e2e8f0',
-                    textAlign: 'center',
-                    cursor: 'pointer'
-                  }}
-                  onClick={() => alert(`Festival ${arch.year} Highlights:\nTotal Contributions: ₹${arch.stats?.totalIncome?.toLocaleString()}\nDonors Recorded: ${arch.membersCount || 108}`)}
-                >
-                  <div style={{ color: 'var(--clr-gold)', marginBottom: '1rem' }}>
-                    <Calendar size={48} strokeWidth={1.5} />
-                  </div>
-                  <h3 style={{ fontSize: '2rem', color: '#1e293b', marginBottom: '0.5rem' }}>{arch.year}</h3>
-                  <p style={{ color: '#64748b', fontSize: '0.9rem' }}>Annual Festival Record</p>
-                  <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'center' }}>
-                    <span className="btn btn-outline" style={{ fontSize: '0.8rem', padding: '0.5rem 1.5rem' }}>View Accounts archive</span>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          ) : (
-            <div style={{ textAlign: 'center', padding: '4rem', color: '#94a3b8', border: '2px dashed #e2e8f0', borderRadius: '30px' }}>
-              <p>No historical festival records are currently archived for digital view.</p>
-            </div>
-          )}
-        </div>
-      </section>
-
       {/* Highlights Section - Integrated into Dark Theme */}
       <section className="section" style={{ background: 'linear-gradient(to bottom, #4a0000, #300000)', position: 'relative', borderTop: '2px solid rgba(212, 175, 55, 0.2)' }}>
         <div className="container">
